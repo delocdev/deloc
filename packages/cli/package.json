@@ -1,0 +1,69 @@
+{
+  "name": "@deloc/cli",
+  "version": "0.1.17",
+  "description": "Deploy static web apps and get a shareable URL in seconds",
+  "type": "module",
+  "bin": {
+    "deloc": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "boxen": "^8.0.1",
+    "chalk": "^5.6.2",
+    "clipboardy": "^5.3.1",
+    "commander": "^13.0.0",
+    "fast-glob": "^3.3.3",
+    "open": "^11.0.0",
+    "ora": "^9.3.0"
+  },
+  "peerDependencies": {
+    "puppeteer": ">=21.0.0"
+  },
+  "peerDependenciesMeta": {
+    "puppeteer": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@deloc/shared": "workspace:*",
+    "@types/archiver": "^7.0.0",
+    "@types/node": "^22.0.0",
+    "puppeteer": "^24.40.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "deploy",
+    "static",
+    "hosting",
+    "cli",
+    "deloc"
+  ],
+  "homepage": "https://github.com/delocdev/deloc/tree/main/packages/cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/delocdev/deloc",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/delocdev/deloc/issues"
+  },
+  "author": "Deloc <team@deloc.dev>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
+}
