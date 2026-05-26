@@ -18,7 +18,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: ['18', '20', '22']
+        # Dev toolchain requires Node 20+ (vitest@4 imports node:util.styleText,
+        # added in 20). Published bundles still target node18 via tsup, so
+        # consumers running Node 18 are unaffected.
+        node: ['20', '22']
 
     steps:
       - name: Checkout

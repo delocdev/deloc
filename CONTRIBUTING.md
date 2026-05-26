@@ -20,7 +20,7 @@ packages/
 
 You'll need:
 
-- Node 18, 20, or 22
+- Node 20 or 22 (the dev toolchain uses vitest 4, which requires Node 20+; published packages still run on Node 18+)
 - [pnpm](https://pnpm.io/) 10+
 
 ```bash
