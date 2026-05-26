@@ -33,10 +33,16 @@ export async function ogCommand(slug: string, imagePath: string): Promise<void> 
     process.exit(1);
   }
 
+  // Copy into a fresh ArrayBuffer so the Blob constructor accepts it.
+  // Node's Buffer is typed Buffer<ArrayBufferLike>, which doesn't satisfy
+  // BlobPart's ArrayBufferView<ArrayBuffer> constraint — a raw ArrayBuffer
+  // sidesteps the variance.
+  const ab = new ArrayBuffer(buffer.byteLength);
+  new Uint8Array(ab).set(buffer);
   const formData = new FormData();
   formData.append(
     "file",
-    new Blob([buffer], { type: "image/png" }),
+    new Blob([ab], { type: "image/png" }),
     "og-screenshot.png",
   );
 
