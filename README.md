@@ -70,7 +70,7 @@ your project → @deloc/cli or @deloc/mcp → api.deloc.dev → Cloudflare R2
                                                             ↓
                                                   Cloudflare Worker (edge)
                                                             ↓
-                                                    *.deloc.dev URL
+                                                    *.deloc.app URL
 ```
 
 The CLI and MCP are thin clients around a single HTTP API. They zip your build output, upload it, and return a URL. All hosting, CDN, auth, and abuse prevention happens server-side on Deloc's infrastructure.
