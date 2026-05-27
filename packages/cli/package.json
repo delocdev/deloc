@@ -1,6 +1,6 @@
 {
   "name": "@deloc/cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Deploy static web apps and get a shareable URL in seconds",
   "type": "module",
   "bin": {

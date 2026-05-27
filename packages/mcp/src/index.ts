@@ -14,8 +14,11 @@ import { registerActionWriteTools } from "./tools/actions-write.js";
 import { registerActionSecretTools } from "./tools/action-secrets.js";
 import { registerOauthCredentialTools } from "./tools/oauth-credentials.js";
 
+// Injected at build time via tsup's `define` from this package's package.json.
+declare const __PKG_VERSION__: string;
+
 async function main() {
-  const server = new McpServer({ name: "deloc", version: "0.1.0" });
+  const server = new McpServer({ name: "deloc", version: __PKG_VERSION__ });
 
   // Resolve token: env var -> ~/.deloc/config.json -> empty
   const token = await resolveToken();

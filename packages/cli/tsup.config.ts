@@ -1,4 +1,11 @@
 import { defineConfig } from "tsup";
+import { readFileSync } from "node:fs";
+
+// Inject the current package.json version so the CLI's --version flag
+// stays in sync with the published version automatically.
+const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as {
+  version: string;
+};
 
 export default defineConfig({
   entry: ["src/index.ts"],
@@ -10,4 +17,7 @@ export default defineConfig({
   sourcemap: true,
   // Bundle @deloc/shared into the output so we don't need workspace:* at runtime
   noExternal: ["@deloc/shared"],
+  define: {
+    __PKG_VERSION__: JSON.stringify(pkg.version),
+  },
 });

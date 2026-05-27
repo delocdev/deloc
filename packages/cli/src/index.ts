@@ -45,10 +45,13 @@ import {
 
 const program = new Command();
 
+// Injected at build time via tsup's `define` from this package's package.json.
+declare const __PKG_VERSION__: string;
+
 program
   .name("deloc")
   .description("Deploy static web apps and get a shareable URL in seconds")
-  .version("0.1.0");
+  .version(__PKG_VERSION__);
 
 program
   .command("deploy [dir]")
