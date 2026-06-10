@@ -6,12 +6,13 @@
 // Wildcard entries are matched by matchesAllowlist(); "*.example.com" matches
 // "api.example.com" and "x.y.example.com" but NOT "example.com" itself.
 export const DEFAULT_ALLOWED_ACTION_DOMAINS: string[] = [
-  // Test / sandbox endpoints — safe to POST to, publicly documented
-  "webhook.site",
-  "httpbin.org",
-  "postman-echo.com",
-
-  // Workflow-automation catch hooks — the generic-webhook escape hatch
+  // Workflow-automation catch hooks — the generic-webhook escape hatch.
+  // These accept a POST and hand it to a user-owned automation; they do not
+  // redirect or echo arbitrary requests, so they cannot be turned into an SSRF
+  // springboard or a public exfiltration sink. Generic test endpoints that CAN
+  // (httpbin.org + postman-echo.com follow attacker-controlled redirects;
+  // webhook.site captures and displays whatever is POSTed) are deliberately
+  // NOT defaulted — an org that needs one adds it via the admin console.
   "hooks.zapier.com",
   "hook.eu1.make.com",
   "hook.us1.make.com",
