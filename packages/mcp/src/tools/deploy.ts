@@ -18,6 +18,11 @@ import { tmpdir } from "node:os";
 import { API_URL, requireToken, getToken, apiFetch } from "../api.js";
 import { generatePassword, AUTO_GENERATE_KEYWORDS, daysUntil } from "../helpers.js";
 
+declare const __PKG_VERSION__: string;
+
+/** Sent as X-Deloc-Client so the API can attribute deploys to the MCP server. */
+const MCP_CLIENT = `mcp/${__PKG_VERSION__}`;
+
 const SENSITIVE_KEYWORDS = ["internal", "confidential", "draft", "private", "secret", "do-not-share"];
 
 /** CDN patterns that are known to produce broken UMD globals in single-file apps. */
@@ -548,7 +553,7 @@ For directories with a pre-built index.html: deploys the directory as-is. Use ES
           const existing = await checkExistingApp(slug);
           const isUpdate = existing.exists && (existing.status === "active" || existing.status === "disabled");
 
-          const pasteOptions: PasteDeployOptions = {};
+          const pasteOptions: PasteDeployOptions = { client: MCP_CLIENT };
           if (password) pasteOptions.password = password;
           if (args.public) pasteOptions.visibility = "public";
           if (args.domain_restrict && args.domain_restrict.length > 0) {
@@ -602,7 +607,7 @@ For directories with a pre-built index.html: deploys the directory as-is. Use ES
           if (ogImage) uploadOptions.ogImage = ogImage;
           if (args.og_title) uploadOptions.ogTitle = args.og_title;
           if (args.og_description) uploadOptions.ogDescription = args.og_description;
-          const result = await uploadToApi(API_URL, getToken(), zipBuffer, appName, Object.keys(uploadOptions).length > 0 ? uploadOptions : undefined);
+          const result = await uploadToApi(API_URL, getToken(), zipBuffer, appName, { ...uploadOptions, client: MCP_CLIENT });
 
           if (!isDeployResult(result)) {
             return text(`Deploy failed: ${formatDeployError(result.httpStatus, result.error)}`);
@@ -663,7 +668,7 @@ For directories with a pre-built index.html: deploys the directory as-is. Use ES
       if (ogImage) uploadOptions.ogImage = ogImage;
       if (args.og_title) uploadOptions.ogTitle = args.og_title;
       if (args.og_description) uploadOptions.ogDescription = args.og_description;
-      const result = await uploadToApi(API_URL, getToken(), zipBuffer, appName, Object.keys(uploadOptions).length > 0 ? uploadOptions : undefined);
+      const result = await uploadToApi(API_URL, getToken(), zipBuffer, appName, { ...uploadOptions, client: MCP_CLIENT });
 
       if (!isDeployResult(result)) {
         return text(`Deploy failed: ${formatDeployError(result.httpStatus, result.error)}`);

@@ -12,6 +12,13 @@ export type OAuthProvider = "microsoft" | "google" | "okta" | "entra";
 
 export type AuthTier = "standard" | "enterprise";
 
+// How a deploy arrived. `client` is self-reported via the X-Deloc-Client
+// header — analytics only, never authorization. "api" = no/unrecognized
+// header (curl, CI, third-party); "unknown" = row predates tracking.
+export const DEPLOY_CLIENTS = ["cli", "mcp", "web", "api"] as const;
+export type DeployClient = (typeof DEPLOY_CLIENTS)[number];
+export type DeployMethod = "zip" | "paste";
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
@@ -56,6 +63,9 @@ export interface AppDetail extends AppSummary {
   bandwidthUsedBytes: number;
   expiresAt: string | null;
   publishedBy: string;
+  // Latest deploy's source. "unknown" for apps that predate tracking.
+  deployClient: DeployClient | "unknown";
+  deployMethod: DeployMethod | "unknown";
 }
 
 // Actions ------------------------------------------------------------------

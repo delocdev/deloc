@@ -20,6 +20,11 @@ import { getToken, loadConfig, getApiUrl } from "../config.js";
 import { chalk, ora, successBox, errorMessage, warnMessage } from "../ui.js";
 import { promptMcpInstall } from "./install-mcp.js";
 
+declare const __PKG_VERSION__: string;
+
+/** Sent as X-Deloc-Client so the API can attribute deploys to the CLI. */
+const CLI_CLIENT = `cli/${__PKG_VERSION__}`;
+
 interface DeployOptions {
   name?: string;
   dir?: string;
@@ -168,7 +173,7 @@ export async function deployCommand(dirArg: string | undefined, options: DeployO
         : undefined;
   let result;
   try {
-    result = await uploadToApi(getApiUrl(), token, zipBuffer, appName, uploadOptions);
+    result = await uploadToApi(getApiUrl(), token, zipBuffer, appName, { ...uploadOptions, client: CLI_CLIENT });
   } catch {
     spinner.fail("Could not connect to Deloc API. Check your internet connection.");
     process.exit(1);

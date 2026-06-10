@@ -61,6 +61,9 @@ export interface UploadOptions {
   ogImage?: Buffer;
   ogTitle?: string;
   ogDescription?: string;
+  /** Client identity sent as the X-Deloc-Client header, e.g. "cli/2.3.1".
+   *  Used server-side for deploy-source analytics only — never authorization. */
+  client?: string;
 }
 
 export interface DeployError {
@@ -100,7 +103,10 @@ export async function uploadToApi(
 
   const resp = await fetch(`${apiUrl}/api/apps/upload`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(options?.client ? { "X-Deloc-Client": options.client } : {}),
+    },
     body: formData,
   });
 
@@ -130,6 +136,9 @@ export interface PasteDeployOptions {
   ogDescription?: string;
   slug?: string;
   type?: "html" | "react" | "auto";
+  /** Client identity sent as the X-Deloc-Client header, e.g. "mcp/1.8.0".
+   *  Used server-side for deploy-source analytics only — never authorization. */
+  client?: string;
 }
 
 export async function pasteToApi(
@@ -153,6 +162,7 @@ export async function pasteToApi(
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
+      ...(options?.client ? { "X-Deloc-Client": options.client } : {}),
     },
     body: JSON.stringify(payload),
   });
