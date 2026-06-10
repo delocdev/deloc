@@ -6,3 +6,4 @@ export * from "./file-types.js";
 export * from "./deploy.js";
 export * from "./screenshot.js";
 export * from "./action-domains.js";
+export * from "./connectors.js";
