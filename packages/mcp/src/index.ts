@@ -13,6 +13,8 @@ import { registerActionTools } from "./tools/actions.js";
 import { registerActionWriteTools } from "./tools/actions-write.js";
 import { registerActionSecretTools } from "./tools/action-secrets.js";
 import { registerOauthCredentialTools } from "./tools/oauth-credentials.js";
+import { registerConnectionTools } from "./tools/connections.js";
+import { registerDashboardQueryTools } from "./tools/dashboard-queries.js";
 
 // Injected at build time via tsup's `define` from this package's package.json.
 declare const __PKG_VERSION__: string;
@@ -37,6 +39,8 @@ async function main() {
     ...registerActionWriteTools(server),
     ...registerActionSecretTools(server),
     ...registerOauthCredentialTools(server),
+    ...registerConnectionTools(server),
+    ...registerDashboardQueryTools(server),
   ];
 
   const onAuthenticated = () => {

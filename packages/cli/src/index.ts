@@ -42,6 +42,18 @@ import {
   credentialsDeleteCommand,
   credentialsTestCommand,
 } from "./commands/credentials.js";
+import {
+  connectCommand,
+  connectionsListCommand,
+  connectionsDeleteCommand,
+} from "./commands/connect.js";
+import {
+  queryAddCommand,
+  queryListCommand,
+  queryUpdateCommand,
+  queryRemoveCommand,
+  queryRunCommand,
+} from "./commands/queries.js";
 
 const program = new Command();
 
@@ -333,5 +345,70 @@ credentials
   .command("test <name>")
   .description("Exchange credentials for a fresh access token against the upstream (bypasses cache)")
   .action(credentialsTestCommand);
+
+program
+  .command("connect <provider>")
+  .description("Connect a data source (bigquery) — opens Google consent in the browser, Deloc stores the credential server-side")
+  .option("--name <name>", "Identifier for the connection (lowercase letters/digits/underscores)")
+  .option("--display-name <label>", "Human-readable label shown in the dashboard")
+  .action(connectCommand);
+
+const connections = program
+  .command("connections")
+  .description("Manage data connections (used by `deloc query` for scheduled dashboard refreshes)");
+
+connections
+  .command("list")
+  .description("List your data connections and their status")
+  .action(connectionsListCommand);
+
+connections
+  .command("delete <id-or-name>")
+  .description("Delete a data connection (blocked while queries still use it)")
+  .action(connectionsDeleteCommand);
+
+const query = program
+  .command("query")
+  .description("Manage scheduled dashboard queries — Deloc runs the SQL daily and writes {name}.json into the app");
+
+query
+  .command("add <slug> <name>")
+  .description("Schedule a daily BigQuery query whose result is served as {name}.json in the app")
+  .requiredOption("--connection <id-or-name>", "Data connection to run through (see `deloc connections list`)")
+  .requiredOption("--project <gcp-project-id>", "GCP project to bill the query to")
+  .option("--sql <sql>", "A single read-only SELECT statement")
+  .option("--sql-file <path>", "Read the SQL from a file instead of --sql")
+  .option("--max-bytes-billed <n>", "Per-run BigQuery bytes-billed cap (default 10 GB)")
+  .option("--max-output-bytes <n>", "Output file size cap (default 8 MB)")
+  .option("--disabled", "Create without scheduling (enable later with `deloc query update --enable`)")
+  .action(queryAddCommand);
+
+query
+  .command("list <slug>")
+  .description("List the scheduled queries on an app with last-run results")
+  .action(queryListCommand);
+
+query
+  .command("update <slug> <name>")
+  .description("Update a scheduled query (all options optional)")
+  .option("--connection <id-or-name>", "Repoint to a different data connection")
+  .option("--project <gcp-project-id>")
+  .option("--sql <sql>")
+  .option("--sql-file <path>")
+  .option("--max-bytes-billed <n>")
+  .option("--max-output-bytes <n>")
+  .option("--enable", "Resume the daily schedule")
+  .option("--disable", "Pause the daily schedule")
+  .action(queryUpdateCommand);
+
+query
+  .command("remove <slug> <name>")
+  .description("Delete a scheduled query (the existing {name}.json stays, it just stops refreshing)")
+  .action(queryRemoveCommand);
+
+query
+  .command("run <slug> <name>")
+  .description("Run a scheduled query immediately and write fresh data to the app")
+  .action(queryRunCommand);
 
 program.parse();

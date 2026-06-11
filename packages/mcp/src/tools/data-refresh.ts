@@ -267,7 +267,7 @@ export function registerDataRefreshTool(server: McpServer) {
     "setup_data_refresh",
     `Generate a complete backend script that queries a data warehouse and auto-refreshes a Deloc dashboard. Creates a ready-to-deploy Python project (main.py, requirements.txt, Dockerfile) with scheduling instructions.
 
-Supported data sources: BigQuery, Snowflake, Postgres, MySQL, or any HTTP/REST API.
+Supported data sources: Snowflake, Postgres, MySQL, or any HTTP/REST API. For BigQuery, prefer connect_bigquery + create_dashboard_query instead — Deloc then runs the query daily itself, with nothing for the user to host or schedule. Use this tool for BigQuery only if the user explicitly wants to run their own pipeline.
 
 Use this AFTER deploying a dashboard that fetches a data file (e.g. fetch('./data.json')) — this tool generates the pipeline that keeps that file fresh on a schedule.`,
     {

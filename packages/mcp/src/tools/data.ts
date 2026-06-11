@@ -71,7 +71,7 @@ function validateFilename(name: string): string | null {
 export function registerDataTools(server: McpServer) {
   const uploadData = server.tool(
     "upload_data",
-    "Upload or replace a data file (CSV, JSON, TSV, XML, TXT, max 10MB) inside an already-deployed Deloc app WITHOUT redeploying. Use this to refresh dashboard data from BigQuery, databases, or APIs on a schedule. The file is served at the same URL as the rest of the app, so client code that does fetch('./data.csv') will see the new content immediately.",
+    "Upload or replace a data file (CSV, JSON, TSV, XML, TXT, max 10MB) inside an already-deployed Deloc app WITHOUT redeploying. Use this to refresh dashboard data from databases or APIs on a schedule. The file is served at the same URL as the rest of the app, so client code that does fetch('./data.csv') will see the new content immediately. For BigQuery-backed dashboards, prefer connect_bigquery + create_dashboard_query — Deloc then refreshes the data daily without any client-side uploads.",
     {
       slug: z.string().describe("The app slug (e.g. 'q3-revenue-dashboard')"),
       file_path: z.string().describe("Absolute path to the local data file to upload (max 10MB)"),
